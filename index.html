@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bidón Fresco 💧</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: linear-gradient(180deg, #f0fbff 0%, #ecfeff 40%, #f8fdff 100%); color: #0f172a; overflow-x: hidden; }
+    .hero-wave::before, .hero-wave::after { content: ""; position: absolute; left: -10%; width: 120%; height: 180px; border-radius: 45%; background: rgba(255,255,255,.22); animation: waveFloat 9s linear infinite; }
+    .hero-wave::before { bottom: -100px; }
+    .hero-wave::after { bottom: -120px; opacity: .55; animation-duration: 13s; animation-direction: reverse; }
+    .card-lift { transition: transform .28s ease, box-shadow .28s ease; }
+    .card-lift:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 18px 34px rgba(14,165,233,.22); }
+    .btn-bounce { transition: transform .2s ease, box-shadow .2s ease; }
+    .btn-bounce:hover { transform: scale(1.05); box-shadow: 0 14px 20px rgba(34,211,238,.34); }
+    .bubble { animation: bubbleRise linear infinite; }
+    .sale-bubble { animation: saleBubbleRise .9s ease-out forwards; }
+    .product-bg { position: absolute; inset: 0; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="120" viewBox="0 0 80 120"><path d="M28 10h24l2 8c8 8 12 26 12 48 0 28-14 44-26 44S14 94 14 66c0-22 4-40 12-48z" fill="none" stroke="%230ea5e9" stroke-width="3" opacity=".16"/></svg>'); background-size: 130px 180px; background-repeat: repeat; opacity: .36; pointer-events: none; }
+    @keyframes waveFloat { from { transform: translateX(0) rotate(0deg);} to { transform: translateX(-90px) rotate(2deg);} }
+    @keyframes bubbleRise { 0% { transform: translateY(0) scale(1); opacity: .2;} 50% { opacity: .8;} 100% { transform: translateY(-110px) scale(1.25); opacity: 0;} }
+    @keyframes saleBubbleRise { 0% { transform: translateY(0) scale(.7); opacity: .95;} 70% { opacity: .95;} 100% { transform: translateY(-130px) scale(1.4); opacity: 0;} }
+  </style>
+</head>
+<body>
+  <nav class="fixed top-0 z-50 w-full backdrop-blur-md bg-white/75 border-b border-sky-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="h-16 flex items-center justify-between">
+        <a href="#inicio" class="text-xl md:text-2xl font-black text-sky-600 tracking-tight">Bidón Fresco 💧</a>
+        <div class="hidden md:flex items-center gap-6 font-semibold text-sky-700">
+          <a href="#inicio" data-i18n="nav.home" class="hover:text-cyan-500 transition">Inicio</a>
+          <a href="dashboard.html" data-i18n="nav.login" class="hover:text-cyan-500 transition">Iniciar sesión</a>
+          <a href="#productos" data-i18n="nav.products" class="hover:text-cyan-500 transition">Productos</a>
+          <a href="#carrito" data-i18n="nav.cart" class="hover:text-cyan-500 transition">Carrito</a>
+        </div>
+        <div class="inline-flex rounded-full bg-sky-100 p-1">
+          <button id="lang-es" class="px-3 py-1 rounded-full text-sm font-bold bg-sky-500 text-white">ES 🇨🇱</button>
+          <button id="lang-en" class="px-3 py-1 rounded-full text-sm font-bold text-sky-700">EN 🇬🇧</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section id="inicio" class="relative hero-wave overflow-hidden pt-20 min-h-[90vh] bg-gradient-to-br from-sky-500 via-cyan-400 to-sky-300">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14 h-full">
+        <div class="grid lg:grid-cols-2 gap-10 items-center min-h-[75vh]">
+          <div class="text-white">
+            <p class="text-lg mb-3 font-semibold" data-i18n="hero.kicker">Delivery de agua fresca en minutos 💧</p>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight" data-i18n="hero.title">Hidrata tu día con Bidón Fresco</h1>
+            <p class="mt-5 text-lg sm:text-xl text-sky-50 max-w-xl" data-i18n="hero.subtitle">Bidones recargados, heladitos y listos para tu casa u oficina.</p>
+            <a href="#productos" class="btn-bounce inline-flex mt-8 px-8 py-4 text-lg font-black rounded-2xl bg-white text-sky-600 hover:bg-sky-50" data-i18n="hero.cta">¡Comprar ahora!</a>
+          </div>
+          <div class="relative bg-white/20 border border-white/40 rounded-3xl shadow-2xl p-6 sm:p-8">
+            <svg id="jug-svg" viewBox="0 0 300 440" class="w-full max-w-md mx-auto drop-shadow-[0_18px_30px_rgba(2,132,199,.45)]">
+              <defs>
+                <clipPath id="jugClip"><path d="M95 26h110l12 34c28 25 44 78 44 145 0 118-51 208-111 208S39 323 39 205c0-67 16-120 44-145z"/></clipPath>
+                <linearGradient id="jugGlass" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#dff7ff" stop-opacity=".9"/><stop offset="100%" stop-color="#b6ebff" stop-opacity=".55"/></linearGradient>
+                <linearGradient id="waterGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#67e8f9"/><stop offset="100%" stop-color="#0ea5e9"/></linearGradient>
+              </defs>
+              <path d="M95 26h110l12 34c28 25 44 78 44 145 0 118-51 208-111 208S39 323 39 205c0-67 16-120 44-145z" fill="url(#jugGlass)" stroke="#0284c7" stroke-width="8"/>
+              <rect x="122" y="10" width="56" height="20" rx="8" fill="#0ea5e9"/><rect x="107" y="2" width="86" height="16" rx="7" fill="#0369a1"/>
+              <g clip-path="url(#jugClip)">
+                <rect id="waterRect" x="20" y="410" width="260" height="0" fill="url(#waterGrad)"/>
+                <path id="waterWave" d="M0 390 Q30 380 60 390 T120 390 T180 390 T240 390 T300 390 V440 H0 Z" fill="#7dd3fc" opacity=".8"></path>
+                <circle class="bubble" cx="95" cy="365" r="5" fill="#e0f2fe" style="animation-duration:2.4s;animation-delay:.4s;"></circle>
+                <circle class="bubble" cx="140" cy="350" r="4" fill="#e0f2fe" style="animation-duration:2s;animation-delay:.7s;"></circle>
+                <circle class="bubble" cx="190" cy="370" r="6" fill="#e0f2fe" style="animation-duration:2.7s;animation-delay:.1s;"></circle>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="productos" class="relative py-20">
+      <div class="product-bg"></div>
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-sky-700 mb-10 text-center" data-i18n="products.title">Nuestros Productos</h2>
+        
+        <!-- Campo de búsqueda por código de barras -->
+        <div class="max-w-md mx-auto mb-8">
+          <div class="relative">
+            <input id="barcode-search" type="text" placeholder="Buscar por código de barras..." class="w-full px-4 py-3 rounded-xl border border-sky-200 focus:outline-none focus:ring-2 focus:ring-cyan-300 pr-12" />
+            <button id="search-btn" class="absolute right-2 top-1/2 transform -translate-y-1/2 px-3 py-1 rounded-lg bg-sky-500 text-white font-bold hover:bg-sky-600">
+              🔍
+            </button>
+          </div>
+        </div>
+        
+        <div id="product-grid" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+      </div>
+    </section>
+
+    <section id="carrito" class="py-8">
+      <div class="max-w-4xl mx-auto px-4">
+        <div class="rounded-3xl bg-white border border-sky-100 shadow-xl p-6">
+          <div class="flex items-center justify-between gap-3 mb-4">
+            <h3 class="text-2xl font-extrabold text-sky-700"><span data-i18n="cart.title">Tu carrito</span> (<span id="cart-count">0</span>)</h3>
+            <button id="clear-cart" class="text-sm px-3 py-1 rounded-lg bg-rose-100 text-rose-700 font-bold" data-i18n="cart.clear">Vaciar</button>
+          </div>
+          <div id="cart-list" class="space-y-3"></div>
+          <div class="mt-5 pt-4 border-t border-sky-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <p class="text-lg font-black text-sky-700"><span data-i18n="cart.total">Total</span>: <span id="cart-total">$0</span></p>
+            <a href="checkout.html" id="pay-btn" class="btn-bounce inline-flex justify-center px-6 py-3 rounded-xl font-black bg-cyan-400 text-sky-900" data-i18n="cart.pay">Pagar</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const CART_KEY = "bidonFrescoCart";
+    const PRODUCTS_KEY = "bidonFrescoProducts";
+    const LANG_KEY = "bidonFrescoLang";
+    let currentLang = localStorage.getItem(LANG_KEY) || "es";
+
+    const defaultProducts = [
+      { id: "full5", nameEs: "5 L lleno", nameEn: "5 L full", size: "5L", full: true, price: 2990, stock: 50, custom: false },
+      { id: "full10", nameEs: "10 L lleno", nameEn: "10 L full", size: "10L", full: true, price: 4990, stock: 50, custom: false },
+      { id: "full20", nameEs: "20 L lleno", nameEn: "20 L full", size: "20L", full: true, price: 7990, stock: 50, custom: false },
+      { id: "empty20", nameEs: "20 L vacío", nameEn: "20 L empty", size: "20L", full: false, price: 5990, stock: 40, custom: false }
+    ];
+
+    const translations = {
+      es: {
+        nav: { home: "Inicio", login: "Iniciar sesión", products: "Productos", cart: "Carrito" },
+        hero: { kicker: "Delivery de agua fresca en minutos 💧", title: "Hidrata tu día con Bidón Fresco", subtitle: "Bidones recargados, heladitos y listos para tu casa u oficina.", cta: "¡Comprar ahora!" },
+        products: { title: "Nuestros Productos", add: "Agregar al carrito", stock: "Stock", available: "Disponible" },
+        cart: { title: "Tu carrito", clear: "Vaciar", empty: "Tu carrito está vacío 💧", total: "Total", pay: "Pagar", remove: "Eliminar", noStock: "Sin stock suficiente" }
+      },
+      en: {
+        nav: { home: "Home", login: "Login", products: "Products", cart: "Cart" },
+        hero: { kicker: "Fresh water delivery in minutes 💧", title: "Hydrate your day with Bidón Fresco", subtitle: "Refilled, chilled jugs ready for your home or office.", cta: "Buy now!" },
+        products: { title: "Our Products", add: "Add to cart", stock: "Stock", available: "Available" },
+        cart: { title: "Your cart", clear: "Clear", empty: "Your cart is empty 💧", total: "Total", pay: "Pay", remove: "Remove", noStock: "Not enough stock" }
+      }
+    };
+
+    function t(path) { return path.split(".").reduce((obj, key) => obj?.[key], translations[currentLang]) || path; }
+    function getCart() { return JSON.parse(localStorage.getItem(CART_KEY) || "[]"); }
+    function saveCart(cart) { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
+    function getCatalog() {
+      const raw = JSON.parse(localStorage.getItem(PRODUCTS_KEY) || "null");
+      if (raw && Array.isArray(raw) && raw.length) return raw;
+      localStorage.setItem(PRODUCTS_KEY, JSON.stringify(defaultProducts));
+      return [...defaultProducts];
+    }
+    function formatPrice(value) {
+      if (currentLang === "es") return new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(value);
+      const approxUsd = Math.round(value / 950);
+      return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(approxUsd);
+    }
+
+    function jugIcon(full = true) {
+      const fill = full ? "url(#miniWater)" : "transparent";
+      return `<svg viewBox="0 0 120 140" class="w-20 h-20"><defs><linearGradient id="miniWater" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#67e8f9"></stop><stop offset="100%" stop-color="#0ea5e9"></stop></linearGradient></defs><path d="M38 12h44l5 15c11 10 19 30 19 56 0 32-19 51-46 51S14 115 14 83c0-26 8-46 19-56z" fill="#e0f2fe" stroke="#0284c7" stroke-width="4"></path><path d="M22 92h76v30H22z" fill="${fill}" opacity=".9"></path><rect x="46" y="4" width="28" height="8" rx="3" fill="#0284c7"></rect></svg>`;
+    }
+
+    let barcodeFilter = "";
+
+    function getProductName(product) {
+      return currentLang === "es" ? product.nameEs : product.nameEn;
+    }
+
+    function renderProducts() {
+      const catalog = getCatalog();
+      const filteredCatalog = barcodeFilter 
+        ? catalog.filter(product => product.barcode && product.barcode.includes(barcodeFilter))
+        : catalog;
+      const grid = document.getElementById("product-grid");
+      grid.innerHTML = filteredCatalog.map(product => `
+        <article class="card-lift rounded-3xl bg-white/90 border border-sky-100 shadow-lg overflow-hidden text-center">
+          <div class="relative h-40 bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center overflow-hidden">
+            ${product.imagen ? `<img src="${product.imagen}" alt="${getProductName(product)}" class="w-full h-full object-cover">` : `<div class="flex justify-center">${jugIcon(product.full)}</div>`}
+          </div>
+          <div class="p-5">
+            <h3 class="text-xl font-extrabold text-sky-700">${getProductName(product)}</h3>
+            <p class="text-2xl font-black text-cyan-600 mt-1">${formatPrice(product.price)}</p>
+            ${product.barcode ? `<p class="text-xs text-slate-500 mt-1 font-mono">Código: ${product.barcode}</p>` : ""}
+            ${product.stock > 0 ? `<p class="text-sm text-slate-500 mt-2">${t("products.available")}: ${product.stock}</p>` : ""}
+            <button ${product.stock <= 0 ? "disabled" : ""} class="btn-bounce mt-4 w-full py-2.5 rounded-xl font-bold bg-sky-500 text-white hover:bg-sky-600 disabled:opacity-50 disabled:cursor-not-allowed" onclick="addToCart('${product.id}')">${t("products.add")} 💧</button>
+          </div>
+        </article>`).join("");
+    }
+
+    function cartCount(cart) { return cart.reduce((sum, item) => sum + item.qty, 0); }
+    function cartTotal(cart) { return cart.reduce((sum, item) => sum + (item.price * item.qty), 0); }
+
+    function renderCart() {
+      const cart = getCart();
+      const list = document.getElementById("cart-list");
+      if (!cart.length) {
+        list.innerHTML = `<p class="text-slate-500">${t("cart.empty")}</p>`;
+      } else {
+        list.innerHTML = cart.map(item => `
+          <div class="flex items-center justify-between gap-3 border border-sky-100 rounded-xl p-3">
+            <div>
+              <p class="font-bold text-sky-700">${currentLang === "es" ? item.nameEs : item.nameEn}</p>
+              <p class="text-sm text-slate-500">${formatPrice(item.price)}</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="changeQty('${item.id}', -1)" class="px-3 py-1 rounded-lg bg-sky-100 text-sky-700 font-bold">-</button>
+              <span class="font-bold min-w-[22px] text-center">${item.qty}</span>
+              <button onclick="changeQty('${item.id}', 1)" class="px-3 py-1 rounded-lg bg-sky-100 text-sky-700 font-bold">+</button>
+              <button onclick="removeItem('${item.id}')" class="ml-2 px-3 py-1 rounded-lg bg-rose-100 text-rose-700 font-bold">${t("cart.remove")}</button>
+            </div>
+          </div>
+        `).join("");
+      }
+      document.getElementById("cart-count").textContent = cartCount(cart);
+      document.getElementById("cart-total").textContent = formatPrice(cartTotal(cart));
+      document.getElementById("pay-btn").classList.toggle("pointer-events-none", !cart.length);
+      document.getElementById("pay-btn").classList.toggle("opacity-60", !cart.length);
+    }
+
+    function addToCart(productId) {
+      const catalog = getCatalog();
+      const product = catalog.find(p => p.id === productId);
+      if (!product) return;
+      const cart = getCart();
+      const existing = cart.find(item => item.id === productId);
+      const inCartQty = existing ? existing.qty : 0;
+      if (inCartQty >= (product.stock ?? 0)) {
+        alert(t("cart.noStock"));
+        return;
+      }
+      if (existing) existing.qty += 1;
+      else cart.push({ id: product.id, nameEs: product.nameEs, nameEn: product.nameEn, size: product.size, full: product.full, price: product.price, qty: 1 });
+      saveCart(cart);
+      renderCart();
+      renderProducts();
+      triggerSaleBubbles();
+    }
+
+    function changeQty(productId, delta) {
+      const catalog = getCatalog();
+      const product = catalog.find(p => p.id === productId);
+      const cart = getCart();
+      const idx = cart.findIndex(item => item.id === productId);
+      if (idx === -1) return;
+      const nextQty = cart[idx].qty + delta;
+      if (delta > 0 && nextQty > (product?.stock ?? 0)) {
+        alert(t("cart.noStock"));
+        return;
+      }
+      cart[idx].qty = nextQty;
+      if (cart[idx].qty <= 0) cart.splice(idx, 1);
+      saveCart(cart);
+      renderCart();
+      renderProducts();
+    }
+
+    function removeItem(productId) {
+      saveCart(getCart().filter(item => item.id !== productId));
+      renderCart();
+      renderProducts();
+    }
+    function clearCart() { saveCart([]); renderCart(); renderProducts(); }
+
+    function triggerSaleBubbles() {
+      const svg = document.getElementById("jug-svg");
+      const waterLayer = svg?.querySelector('g[clip-path="url(#jugClip)"]');
+      if (!waterLayer) return;
+      for (let i = 0; i < 12; i++) {
+        const bubble = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        bubble.setAttribute("cx", (70 + Math.random() * 160).toFixed(2));
+        bubble.setAttribute("cy", (360 + Math.random() * 42).toFixed(2));
+        bubble.setAttribute("r", (2.8 + Math.random() * 4.8).toFixed(2));
+        bubble.setAttribute("fill", "#e0f2fe");
+        bubble.classList.add("sale-bubble");
+        bubble.style.animationDelay = `${Math.random() * 0.32}s`;
+        bubble.style.animationDuration = `${0.62 + Math.random() * 0.55}s`;
+        bubble.addEventListener("animationend", () => bubble.remove(), { once: true });
+        waterLayer.appendChild(bubble);
+      }
+    }
+
+    function animateJug() {
+      const rect = document.getElementById("waterRect");
+      const wave = document.getElementById("waterWave");
+      const duration = 6000;
+      function frame(timestamp) {
+        const progress = (timestamp % duration) / duration;
+        const eased = 0.5 - Math.cos(progress * Math.PI) / 2;
+        const waterHeight = 390 * eased;
+        const y = 410 - waterHeight;
+        rect.setAttribute("y", y.toFixed(2));
+        rect.setAttribute("height", waterHeight.toFixed(2));
+        const amp = 8 + Math.sin(progress * Math.PI * 4) * 5;
+        const level = y + 8;
+        const phase = progress * Math.PI * 8;
+        let d = `M0 ${level.toFixed(2)} `;
+        for (let x = 0; x <= 300; x += 30) d += `L${x} ${(level + Math.sin((x / 32) + phase) * amp).toFixed(2)} `;
+        wave.setAttribute("d", `${d}V440 H0 Z`);
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem(LANG_KEY, lang);
+      document.documentElement.lang = lang;
+      document.querySelectorAll("[data-i18n]").forEach(el => el.textContent = t(el.getAttribute("data-i18n")));
+      document.getElementById("lang-es").className = `px-3 py-1 rounded-full text-sm font-bold ${lang === "es" ? "bg-sky-500 text-white" : "text-sky-700"}`;
+      document.getElementById("lang-en").className = `px-3 py-1 rounded-full text-sm font-bold ${lang === "en" ? "bg-sky-500 text-white" : "text-sky-700"}`;
+      renderProducts();
+      renderCart();
+    }
+
+    function searchByBarcode() {
+      const searchInput = document.getElementById("barcode-search");
+      barcodeFilter = searchInput.value.trim();
+      renderProducts();
+    }
+
+    function clearBarcodeSearch() {
+      barcodeFilter = "";
+      document.getElementById("barcode-search").value = "";
+      renderProducts();
+    }
+
+    document.getElementById("lang-es").addEventListener("click", () => setLanguage("es"));
+    document.getElementById("lang-en").addEventListener("click", () => setLanguage("en"));
+    document.getElementById("clear-cart").addEventListener("click", clearCart);
+    document.getElementById("search-btn").addEventListener("click", searchByBarcode);
+    document.getElementById("barcode-search").addEventListener("input", searchByBarcode);
+    document.getElementById("barcode-search").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") searchByBarcode();
+      if (e.key === "Escape") clearBarcodeSearch();
+    });
+
+    setLanguage(currentLang);
+    animateJug();
+    
+  </script>
+  </script>
+
+</script>
+
+<!-- BOTÓN WHATSAPP -->
+<a href="https://wa.me/56936105035"
+   target="_blank"
+   style="
+     position: fixed;
+     bottom: 20px;
+     right: 20px;
+     width: 60px;
+     height: 60px;
+     background-color: #25D366;
+     border-radius: 50%;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     z-index: 9999;
+   ">
+   <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+        alt="WhatsApp"
+        style="width:35px; height:35px;">
+</a>
+
+</body>
+</html>
+
+</body>
+</html>
+</body>
+</html>

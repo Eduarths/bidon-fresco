@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bidón Fresco 💧 | Panel Dueño</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { background: linear-gradient(180deg, #f0fbff 0%, #ecfeff 40%, #f8fdff 100%); color: #0f172a; }
+    .card-lift { transition: transform .25s ease, box-shadow .25s ease; }
+    .card-lift:hover { transform: translateY(-4px); box-shadow: 0 16px 28px rgba(14,165,233,.18); }
+    .btn-bounce { transition: transform .18s ease, box-shadow .18s ease; }
+    .btn-bounce:hover { transform: scale(1.04); box-shadow: 0 12px 18px rgba(34,211,238,.3); }
+  </style>
+</head>
+<body>
+  <nav class="fixed top-0 z-50 w-full backdrop-blur-md bg-white/75 border-b border-sky-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="h-16 flex items-center justify-between">
+        <a href="index.html#inicio" class="text-xl md:text-2xl font-black text-sky-600 tracking-tight">Bidón Fresco 💧</a>
+        <div class="hidden md:flex items-center gap-6 font-semibold text-sky-700">
+          <a href="index.html#inicio" data-i18n="nav.home" class="hover:text-cyan-500 transition">Inicio</a>
+          <a href="dashboard.html" data-i18n="nav.login" class="text-cyan-600">Iniciar sesión</a>
+          <a href="index.html#productos" data-i18n="nav.products" class="hover:text-cyan-500 transition">Productos</a>
+        </div>
+        <div class="inline-flex rounded-full bg-sky-100 p-1">
+          <button id="lang-es" class="px-3 py-1 rounded-full text-sm font-bold bg-sky-500 text-white">ES 🇨🇱</button>
+          <button id="lang-en" class="px-3 py-1 rounded-full text-sm font-bold text-sky-700">EN 🇬🇧</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="pt-24 pb-14">
+    <section id="auth-section" class="py-10">
+      <div class="max-w-4xl mx-auto px-4">
+        <div class="rounded-3xl bg-white border border-sky-100 shadow-xl p-6 md:p-8">
+          <h1 class="text-3xl md:text-4xl font-extrabold text-sky-700 mb-2" data-i18n="auth.title">Iniciar sesión del dueño</h1>
+          <p class="text-sky-600 mb-6" data-i18n="auth.subtitle">Regístrate o entra para ver todos los movimientos de la tienda.</p>
+          <div id="auth-message" class="hidden rounded-xl px-4 py-3 mb-5 text-sm font-semibold"></div>
+          <div class="grid md:grid-cols-2 gap-5">
+            <form id="login-form" class="rounded-2xl border border-sky-100 p-5 bg-sky-50/30">
+              <h2 class="text-xl font-extrabold text-sky-700 mb-4" data-i18n="auth.login">Iniciar sesión</h2>
+              <label class="block text-sm font-bold text-sky-700 mb-1" for="login-email" data-i18n="auth.email">Correo</label>
+              <input id="login-email" type="email" required class="w-full px-3 py-2 rounded-xl border border-sky-200 mb-3" />
+              <label class="block text-sm font-bold text-sky-700 mb-1" for="login-password" data-i18n="auth.password">Contraseña</label>
+              <input id="login-password" type="password" required class="w-full px-3 py-2 rounded-xl border border-sky-200 mb-4" />
+              <button class="btn-bounce w-full px-4 py-2 rounded-xl bg-sky-500 text-white font-bold" type="submit" data-i18n="auth.loginButton">Entrar</button>
+            </form>
+            <form id="register-form" class="rounded-2xl border border-sky-100 p-5 bg-cyan-50/40">
+              <h2 class="text-xl font-extrabold text-sky-700 mb-4" data-i18n="auth.register">Registrarse</h2>
+              <label class="block text-sm font-bold text-sky-700 mb-1" for="register-name" data-i18n="auth.name">Nombre</label>
+              <input id="register-name" type="text" required class="w-full px-3 py-2 rounded-xl border border-sky-200 mb-3" />
+              <label class="block text-sm font-bold text-sky-700 mb-1" for="register-email" data-i18n="auth.email">Correo</label>
+              <input id="register-email" type="email" required class="w-full px-3 py-2 rounded-xl border border-sky-200 mb-3" />
+              <label class="block text-sm font-bold text-sky-700 mb-1" for="register-password" data-i18n="auth.password">Contraseña</label>
+              <input id="register-password" type="password" minlength="4" required class="w-full px-3 py-2 rounded-xl border border-sky-200 mb-4" />
+              <button class="btn-bounce w-full px-4 py-2 rounded-xl bg-cyan-500 text-sky-900 font-bold" type="submit" data-i18n="auth.registerButton">Crear cuenta</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="dashboard-panel" class="hidden py-6">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-8">
+          <div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-sky-700" data-i18n="dashboard.title">Panel completo de la tienda</h2>
+            <p class="text-sky-600 font-semibold mt-1"><span data-i18n="auth.welcome">Bienvenido</span>: <span id="owner-name">-</span></p>
+          </div>
+          <div class="flex gap-2">
+            <button id="reset-sales" class="btn-bounce px-4 py-2 rounded-xl bg-rose-400 text-white font-bold shadow" data-i18n="dashboard.reset">Resetear ventas</button>
+            <button id="logout-btn" class="btn-bounce px-4 py-2 rounded-xl bg-slate-700 text-white font-bold shadow" data-i18n="auth.logout">Cerrar sesión</button>
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <article class="card-lift rounded-2xl bg-white p-5 shadow-md border border-sky-100"><p class="text-sm text-sky-500 font-semibold" data-i18n="dashboard.totalJugs">Total vendidos</p><p id="metric-total" class="text-3xl font-black text-sky-700 mt-2">0</p></article>
+          <article class="card-lift rounded-2xl bg-white p-5 shadow-md border border-sky-100"><p class="text-sm text-sky-500 font-semibold" data-i18n="dashboard.income">Ingresos</p><p id="metric-income" class="text-3xl font-black text-emerald-600 mt-2">$0</p></article>
+          <article class="card-lift rounded-2xl bg-white p-5 shadow-md border border-sky-100"><p class="text-sm text-sky-500 font-semibold" data-i18n="dashboard.bySize">Por tamaño</p><p id="metric-sizes" class="text-base font-extrabold text-sky-700 mt-2">5L:0 / 10L:0 / 20L:0</p></article>
+          <article class="card-lift rounded-2xl bg-white p-5 shadow-md border border-sky-100"><p class="text-sm text-sky-500 font-semibold" data-i18n="dashboard.emptyJugs">Vacíos</p><p id="metric-empty" class="text-3xl font-black text-sky-700 mt-2">0</p></article>
+        </div>
+
+        <section class="mb-8">
+          <h3 class="text-2xl font-extrabold text-sky-700 mb-4" data-i18n="inventory.title">Gestión de productos</h3>
+          <form id="product-form" class="rounded-2xl bg-white border border-sky-100 shadow p-4 mb-4 grid md:grid-cols-6 gap-3">
+            <input id="new-name" required class="px-3 py-2 rounded-xl border border-sky-200" placeholder="Nombre producto" />
+            <input id="new-price" type="number" min="1" required class="px-3 py-2 rounded-xl border border-sky-200" placeholder="Precio" />
+            <input id="new-stock" type="number" min="0" required class="px-3 py-2 rounded-xl border border-sky-200" placeholder="Cantidad stock" />
+            <input id="new-barcode" class="px-3 py-2 rounded-xl border border-sky-200" placeholder="Código de barras" />
+            <input id="new-image" type="file" accept="image/*" class="px-3 py-2 rounded-xl border border-sky-200 file:rounded-lg file:bg-sky-500 file:text-white file:font-bold file:border-0 file:px-2 file:py-1" placeholder="Imagen" />
+            <button class="btn-bounce px-4 py-2 rounded-xl bg-sky-500 text-white font-bold" type="submit" data-i18n="inventory.add">Agregar producto</button>
+          </form>
+          <div class="rounded-2xl bg-white border border-sky-100 shadow p-4 overflow-x-auto">
+            <table class="w-full text-left">
+              <thead><tr class="text-sky-600 text-sm"><th class="py-2 pr-2">ID</th><th class="py-2 pr-2" data-i18n="inventory.product">Producto</th><th class="py-2 pr-2" data-i18n="inventory.price">Precio</th><th class="py-2 pr-2" data-i18n="inventory.stock">Stock</th><th class="py-2 pr-2">Código barras</th><th class="py-2 pr-2" data-i18n="inventory.actions">Acciones</th></tr></thead>
+              <tbody id="products-table"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="mb-8">
+          <h3 class="text-2xl font-extrabold text-sky-700 mb-4" data-i18n="owner.title">Métodos de pago</h3>
+          <div class="grid sm:grid-cols-3 gap-4">
+            <article class="card-lift rounded-2xl bg-white p-5 shadow-md border border-sky-100"><p class="text-sm text-sky-500 font-semibold" data-i18n="payments.cash">Efectivo</p><p id="payment-cash" class="text-3xl font-black text-sky-700 mt-2">0</p></article>
+            <article class="card-lift rounded-2xl bg-white p-5 shadow-md border border-sky-100"><p class="text-sm text-sky-500 font-semibold" data-i18n="payments.transfer">Transferencia</p><p id="payment-transfer" class="text-3xl font-black text-sky-700 mt-2">0</p></article>
+            <article class="card-lift rounded-2xl bg-white p-5 shadow-md border border-sky-100"><p class="text-sm text-sky-500 font-semibold" data-i18n="payments.card">Tarjeta</p><p id="payment-card" class="text-3xl font-black text-sky-700 mt-2">0</p></article>
+          </div>
+        </section>
+
+        <div class="grid lg:grid-cols-2 gap-6 mb-8">
+          <div class="rounded-2xl bg-white p-5 shadow-lg border border-sky-100"><h3 class="font-bold text-xl text-sky-700 mb-4" data-i18n="dashboard.chartTitle">Ventas por tipo</h3><canvas id="salesChart" height="230"></canvas></div>
+          <div class="rounded-2xl bg-white p-5 shadow-lg border border-sky-100"><h3 class="font-bold text-xl text-sky-700 mb-4" data-i18n="dashboard.chartPayment">Pagos por método</h3><canvas id="paymentChart" height="230"></canvas></div>
+        </div>
+
+        <div class="rounded-2xl bg-white p-5 shadow-lg border border-sky-100">
+          <h3 class="font-bold text-xl text-sky-700 mb-4" data-i18n="dashboard.movements">Todos los movimientos</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead>
+                <tr class="text-sky-600 text-sm">
+                  <th class="py-2 pr-3">ID</th><th class="py-2 pr-3" data-i18n="table.date">Fecha</th><th class="py-2 pr-3" data-i18n="table.product">Producto</th><th class="py-2 pr-3" data-i18n="table.size">Tamaño</th><th class="py-2 pr-3" data-i18n="table.state">Estado</th><th class="py-2 pr-3" data-i18n="table.payment">Pago</th><th class="py-2 pr-3" data-i18n="table.transferId">ID transferencia</th><th class="py-2 pr-3" data-i18n="table.price">Precio</th>
+                </tr>
+              </thead>
+              <tbody id="sales-table" class="text-slate-700"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const SALES_KEY = "bidonFrescoSales";
+    const PRODUCTS_KEY = "bidonFrescoProducts";
+    const LANG_KEY = "bidonFrescoLang";
+    const OWNER_USERS_KEY = "bidonFrescoOwnerUsers";
+    const OWNER_SESSION_KEY = "bidonFrescoOwnerSession";
+    const defaultProducts = [
+      { id: "full5", nameEs: "5 L lleno", nameEn: "5 L full", size: "5L", full: true, price: 2990, stock: 50, custom: false },
+      { id: "full10", nameEs: "10 L lleno", nameEn: "10 L full", size: "10L", full: true, price: 4990, stock: 50, custom: false },
+      { id: "full20", nameEs: "20 L lleno", nameEn: "20 L full", size: "20L", full: true, price: 7990, stock: 50, custom: false },
+      { id: "empty20", nameEs: "20 L vacío", nameEn: "20 L empty", size: "20L", full: false, price: 5990, stock: 40, custom: false }
+    ];
+    let currentLang = localStorage.getItem(LANG_KEY) || "es";
+    let salesChart, paymentChart;
+
+    const translations = {
+      es: {
+        nav: { home: "Inicio", products: "Productos", login: "Iniciar sesión" },
+        auth: { title: "Iniciar sesión del dueño", subtitle: "Regístrate o entra para ver todos los movimientos de la tienda.", login: "Iniciar sesión", register: "Registrarse", name: "Nombre", email: "Correo", password: "Contraseña", loginButton: "Entrar", registerButton: "Crear cuenta", logout: "Cerrar sesión", welcome: "Bienvenido", needLogin: "Debes iniciar sesión para ver el panel.", registerOk: "Cuenta creada y sesión iniciada.", userExists: "Ese correo ya está registrado.", loginOk: "Sesión iniciada correctamente.", badLogin: "Correo o contraseña incorrectos." },
+        dashboard: { title: "Panel completo de la tienda",  reset: "Resetear ventas", totalJugs: "Total vendidos", income: "Ingresos", bySize: "Por tamaño", emptyJugs: "Vacíos", chartTitle: "Ventas por tipo", chartPayment: "Pagos por método", movements: "Todos los movimientos", noSales: "Sin movimientos aún" },
+        inventory: { title: "Gestión de productos", add: "Agregar producto", product: "Producto", price: "Precio", stock: "Stock", actions: "Acciones" },
+        owner: { title: "Métodos de pago" },
+        table: { date: "Fecha", product: "Producto", size: "Tamaño", state: "Estado", payment: "Pago", transferId: "ID transferencia", price: "Precio" },
+        payments: { cash: "Efectivo", transfer: "Transferencia", card: "Tarjeta" },
+        states: { full: "Lleno", empty: "Vacío" }
+      },
+      en: {
+        nav: { home: "Home", products: "Products", login: "Login" },
+        auth: { title: "Owner login", subtitle: "Register or login to see all store activity.", login: "Login", register: "Register", name: "Name", email: "Email", password: "Password", loginButton: "Sign in", registerButton: "Create account", logout: "Sign out", welcome: "Welcome", needLogin: "You need to login to see the panel.", registerOk: "Account created and logged in.", userExists: "This email is already registered.", loginOk: "Logged in successfully.", badLogin: "Wrong email or password." },
+        dashboard: { title: "Full store panel",  reset: "Reset sales", totalJugs: "Total sold", income: "Revenue", bySize: "By size", emptyJugs: "Empty", chartTitle: "Sales by type", chartPayment: "Payments by method", movements: "All movements", noSales: "No movements yet" },
+        inventory: { title: "Product management", add: "Add product", product: "Product", price: "Price", stock: "Stock", actions: "Actions" },
+        owner: { title: "Payment methods" },
+        table: { date: "Date", product: "Product", size: "Size", state: "State", payment: "Payment", transferId: "Transfer ID", price: "Price" },
+        payments: { cash: "Cash", transfer: "Bank transfer", card: "Card" },
+        states: { full: "Full", empty: "Empty" }
+      }
+    };
+
+    const t = (path) => path.split(".").reduce((o, k) => o?.[k], translations[currentLang]) || path;
+    const getSales = () => JSON.parse(localStorage.getItem(SALES_KEY) || "[]");
+    const saveSales = (v) => localStorage.setItem(SALES_KEY, JSON.stringify(v));
+    const getUsers = () => JSON.parse(localStorage.getItem(OWNER_USERS_KEY) || "[]");
+    const saveUsers = (v) => localStorage.setItem(OWNER_USERS_KEY, JSON.stringify(v));
+    const getSession = () => JSON.parse(localStorage.getItem(OWNER_SESSION_KEY) || "null");
+    const saveSession = (v) => localStorage.setItem(OWNER_SESSION_KEY, JSON.stringify(v));
+    const clearSession = () => localStorage.removeItem(OWNER_SESSION_KEY);
+    const getCatalog = () => {
+      const raw = JSON.parse(localStorage.getItem(PRODUCTS_KEY) || "null");
+      if (raw && Array.isArray(raw) && raw.length) return raw;
+      localStorage.setItem(PRODUCTS_KEY, JSON.stringify(defaultProducts));
+      return [...defaultProducts];
+    };
+    const saveCatalog = (v) => localStorage.setItem(PRODUCTS_KEY, JSON.stringify(v));
+
+    function formatPrice(value) {
+      if (currentLang === "es") return new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(value);
+      return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(Math.round(value / 950));
+    }
+    const formatDate = (s) => new Date(s).toLocaleString(currentLang === "es" ? "es-CL" : "en-GB", { dateStyle: "short", timeStyle: "short" });
+    const getPaymentLabel = (m) => t(`payments.${m || "cash"}`);
+    const getStateLabel = (f) => f ? t("states.full") : t("states.empty");
+
+    function setAuthMessage(msg, ok = true) {
+      const box = document.getElementById("auth-message");
+      box.textContent = msg;
+      box.className = `rounded-xl px-4 py-3 mb-5 text-sm font-semibold ${ok ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`;
+      box.classList.remove("hidden");
+    }
+
+    function renderProductsManager() {
+      const catalog = getCatalog();
+      const body = document.getElementById("products-table");
+      body.innerHTML = catalog.map(p => `
+        <tr class="border-t border-sky-50 text-sm">
+          <td class="py-2 pr-2 font-mono">${p.id}</td>
+          <td class="py-2 pr-2 flex items-center gap-2">
+            ${p.imagen ? `<img src="${p.imagen}" alt="" class="w-8 h-8 rounded object-cover">` : '<span class="w-8 h-8 rounded bg-sky-100"></span>'}
+            ${currentLang === "es" ? p.nameEs : p.nameEn}
+          </td>
+          <td class="py-2 pr-2 font-bold text-sky-600">${formatPrice(p.price)}</td>
+          <td class="py-2 pr-2">${p.stock ?? 0}</td>
+          <td class="py-2 pr-2 font-mono text-xs">${p.barcode || "-"}</td>
+          <td class="py-2 pr-2">
+            <button onclick="updateStock('${p.id}',1)" class="px-2 py-1 rounded bg-sky-100 text-sky-700 font-bold">+1</button>
+            <button onclick="updateStock('${p.id}',-1)" class="px-2 py-1 rounded bg-sky-100 text-sky-700 font-bold">-1</button>
+            ${p.custom ? `<button onclick="deleteProduct('${p.id}')" class="px-2 py-1 rounded bg-rose-100 text-rose-700 font-bold">X</button>` : ""}
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function updateStock(id, delta) {
+      const catalog = getCatalog();
+      const prod = catalog.find(p => p.id === id);
+      if (!prod) return;
+      prod.stock = Math.max(0, (prod.stock ?? 0) + delta);
+      saveCatalog(catalog);
+      renderProductsManager();
+    }
+
+    function deleteProduct(id) {
+      const catalog = getCatalog().filter(p => p.id !== id);
+      saveCatalog(catalog);
+      renderProductsManager();
+    }
+
+    function handleAddProduct(e) {
+      e.preventDefault();
+      const name = document.getElementById("new-name").value.trim();
+      const price = Number(document.getElementById("new-price").value);
+      const stock = Number(document.getElementById("new-stock").value);
+      const barcode = document.getElementById("new-barcode").value.trim();
+      const imageInput = document.getElementById("new-image");
+      if (!name || price <= 0 || stock < 0) return;
+      const id = `custom-${Date.now()}`;
+      const catalog = getCatalog();
+      
+      const newProduct = { id, nameEs: name, nameEn: name, size: "-", full: false, price, stock, barcode: barcode || null, custom: true };
+      
+      // Procesar imagen si existe
+      if (imageInput.files && imageInput.files[0]) {
+        const file = imageInput.files[0];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          newProduct.imagen = event.target.result; // Guarda base64
+          catalog.push(newProduct);
+          saveCatalog(catalog);
+          document.getElementById("product-form").reset();
+          renderProductsManager();
+        };
+        reader.readAsDataURL(file);
+      } else {
+        catalog.push(newProduct);
+        saveCatalog(catalog);
+        document.getElementById("product-form").reset();
+        renderProductsManager();
+      }
+    }
+
+    function applyAuthVisibility() {
+      const session = getSession();
+      const authSection = document.getElementById("auth-section");
+      const panel = document.getElementById("dashboard-panel");
+      if (!session) {
+        authSection.classList.remove("hidden");
+        panel.classList.add("hidden");
+        setAuthMessage(t("auth.needLogin"), false);
+        return;
+      }
+      authSection.classList.add("hidden");
+      panel.classList.remove("hidden");
+      document.getElementById("owner-name").textContent = session.name;
+      renderProductsManager();
+      refreshDashboard();
+    }
+
+    function renderTable(sales) {
+      const body = document.getElementById("sales-table");
+      const rows = [...sales].reverse();
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="8" class="py-3 text-slate-500">${t("dashboard.noSales")}</td></tr>`;
+        return;
+      }
+      body.innerHTML = rows.map(s => `
+        <tr class="border-t border-sky-50 text-sm">
+          <td class="py-2 pr-3 font-mono">${String(s.id || "").slice(0, 8)}</td>
+          <td class="py-2 pr-3">${formatDate(s.fecha)}</td>
+          <td class="py-2 pr-3">${s.producto?.[currentLang] || "-"}</td>
+          <td class="py-2 pr-3">${s.size || "-"}</td>
+          <td class="py-2 pr-3">${getStateLabel(Boolean(s.full))}</td>
+          <td class="py-2 pr-3">${getPaymentLabel(s.paymentMethod)}</td>
+          <td class="py-2 pr-3">${s.transferReference || "-"}</td>
+          <td class="py-2 pr-3 font-bold text-sky-600">${formatPrice(s.price || 0)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderCharts(sales) {
+      const byProduct = {};
+      sales.forEach(s => {
+        const key = s.producto?.[currentLang] || "N/A";
+        byProduct[key] = (byProduct[key] || 0) + 1;
+      });
+      const paymentCounts = { cash: 0, transfer: 0, card: 0 };
+      sales.forEach(s => {
+        const m = s.paymentMethod || "cash";
+        paymentCounts[m] = (paymentCounts[m] || 0) + 1;
+      });
+      if (salesChart) salesChart.destroy();
+      salesChart = new Chart(document.getElementById("salesChart"), {
+        type: "bar",
+        data: { labels: Object.keys(byProduct), datasets: [{ label: t("dashboard.chartTitle"), data: Object.values(byProduct), borderRadius: 10, backgroundColor: "#0ea5e9" }] },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+      });
+      if (paymentChart) paymentChart.destroy();
+      paymentChart = new Chart(document.getElementById("paymentChart"), {
+        type: "doughnut",
+        data: { labels: [t("payments.cash"), t("payments.transfer"), t("payments.card")], datasets: [{ data: [paymentCounts.cash, paymentCounts.transfer, paymentCounts.card], backgroundColor: ["#22c55e", "#0ea5e9", "#a855f7"] }] },
+        options: { responsive: true, plugins: { legend: { position: "bottom" } } }
+      });
+    }
+
+    function refreshDashboard() {
+      const sales = getSales();
+      const total = sales.length;
+      const income = sales.reduce((sum, s) => sum + (s.price || 0), 0);
+      const sizeCount = sales.reduce((acc, s) => { acc[s.size] = (acc[s.size] || 0) + 1; return acc; }, { "5L": 0, "10L": 0, "20L": 0 });
+      const emptyCount = sales.filter(s => !s.full).length;
+      const paymentCounts = { cash: 0, transfer: 0, card: 0 };
+      sales.forEach(s => { const m = s.paymentMethod || "cash"; paymentCounts[m] = (paymentCounts[m] || 0) + 1; });
+      document.getElementById("metric-total").textContent = total;
+      document.getElementById("metric-income").textContent = formatPrice(income);
+      document.getElementById("metric-sizes").textContent = `5L:${sizeCount["5L"] || 0} / 10L:${sizeCount["10L"] || 0} / 20L:${sizeCount["20L"] || 0}`;
+      document.getElementById("metric-empty").textContent = emptyCount;
+      document.getElementById("payment-cash").textContent = paymentCounts.cash;
+      document.getElementById("payment-transfer").textContent = paymentCounts.transfer;
+      document.getElementById("payment-card").textContent = paymentCounts.card;
+      renderTable(sales);
+      renderCharts(sales);
+    }
+
+    function simulateSale() {
+      const fullCatalog = getCatalog();
+      const available = fullCatalog.filter(p => (p.stock ?? 0) > 0);
+      if (!available.length) return;
+      const p = available[Math.floor(Math.random() * available.length)];
+      const methods = ["cash", "transfer", "card"];
+      const paymentMethod = methods[Math.floor(Math.random() * methods.length)];
+      const sales = getSales();
+      sales.push({
+        id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
+        fecha: new Date().toISOString(),
+        producto: { es: p.nameEs, en: p.nameEn },
+        size: p.size,
+        full: p.full,
+        price: p.price,
+        paymentMethod,
+        transferReference: paymentMethod === "transfer" ? `SIM-${Math.floor(Math.random()*999999)}` : ""
+      });
+      p.stock = Math.max(0, (p.stock ?? 0) - 1);
+      saveCatalog(fullCatalog);
+      saveSales(sales);
+      renderProductsManager();
+      refreshDashboard();
+    }
+
+    function resetSales() { saveSales([]); refreshDashboard(); }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem(LANG_KEY, lang);
+      document.documentElement.lang = lang;
+      document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.getAttribute("data-i18n")); });
+      document.getElementById("lang-es").className = `px-3 py-1 rounded-full text-sm font-bold ${lang === "es" ? "bg-sky-500 text-white" : "text-sky-700"}`;
+      document.getElementById("lang-en").className = `px-3 py-1 rounded-full text-sm font-bold ${lang === "en" ? "bg-sky-500 text-white" : "text-sky-700"}`;
+      applyAuthVisibility();
+    }
+
+    function handleRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById("register-name").value.trim();
+      const email = document.getElementById("register-email").value.trim().toLowerCase();
+      const password = document.getElementById("register-password").value;
+      const users = getUsers();
+      if (users.some(u => u.email === email)) return setAuthMessage(t("auth.userExists"), false);
+      const newUser = { id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(), name, email, password };
+      users.push(newUser);
+      saveUsers(users);
+      saveSession({ id: newUser.id, name: newUser.name, email: newUser.email });
+      document.getElementById("register-form").reset();
+      setAuthMessage(t("auth.registerOk"), true);
+      applyAuthVisibility();
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById("login-email").value.trim().toLowerCase();
+      const password = document.getElementById("login-password").value;
+      const user = getUsers().find(u => u.email === email && u.password === password);
+      if (!user) return setAuthMessage(t("auth.badLogin"), false);
+      saveSession({ id: user.id, name: user.name, email: user.email });
+      setAuthMessage(t("auth.loginOk"), true);
+      applyAuthVisibility();
+    }
+
+    function handleLogout() { clearSession(); applyAuthVisibility(); }
+
+    document.getElementById("register-form").addEventListener("submit", handleRegister);
+    document.getElementById("login-form").addEventListener("submit", handleLogin);
+    document.getElementById("logout-btn").addEventListener("click", handleLogout);
+    
+    document.getElementById("reset-sales").addEventListener("click", resetSales);
+    document.getElementById("product-form").addEventListener("submit", handleAddProduct);
+    document.getElementById("lang-es").addEventListener("click", () => setLanguage("es"));
+    document.getElementById("lang-en").addEventListener("click", () => setLanguage("en"));
+
+    setLanguage(currentLang);
+    window.updateStock = updateStock;
+    window.deleteProduct = deleteProduct;
+  </script>
+</body>
+</html>
+
+
+
